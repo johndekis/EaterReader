@@ -25,6 +25,7 @@ var PORT = process.env.PORT || 8080;
 
 // Initialize Express
 var app = express();
+var request = require('request');
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -37,10 +38,6 @@ app.set("view engine", "handlebars");
 
 // Routes
 //==============================================================================
-
-
-
-var request = require('request');
 
 // Home page render
 app.get("/", function(req, res){
@@ -60,7 +57,22 @@ app.get("/", function(req, res){
 });
 
 
-
+// Savedpage render
+app.get("/saved", function(req, res){
+  db.Article.find({})
+  .then(function(dbArticles) {
+    var hbsObject = {
+      articles: dbArticles
+    }
+    console.log(hbsObject);
+    // If we were able to successfully find Articles, send them back to the client
+    res.render("saved", hbsObject);
+  })
+  .catch(function(err) {
+    // If an error occurred, send it to the client
+    res.json(err);
+  });
+});
 
 
 // A GET route for scraping the eater website
@@ -88,7 +100,7 @@ app.get("/scrape", function(req, res) {
               newArticle.title = $(this).children("h2").children("a").text();
               newArticle.link = $(this).children("h2").children("a").attr("href");
               newArticle.author = $(this).children("div").children("span").children("a").text();
-              
+
               console.log(newArticle.author);
 
               
@@ -150,7 +162,7 @@ app.get("/articles/:id", function(req, res) {
   
 
 
-// Route for saving/updating an Article's associated Note
+// Route for saving/updating an Article's associated Comment
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Comment.create(req.body)
@@ -170,31 +182,42 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
-
-
-
-app.put("/articles/save/:id", function(req, res) {
-     
-  console.log("req.body: " + req.body);
-
-  db.Article.where({_id : req.params.id}).fineOneAndUpdate({saved: true})
-  .then(function(result){
-    console.log(result);
-  });
-});  
-
-// router.delete("/burgers/delete/:id", function(req, res) {
-//     var condition = "id = " + req.params.id;
+// Save an article
+app.put("/articles/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true})
   
-//     burger.delete(condition, function(result) {
-//       if (result.affectedRows == 0) {
-//         // If no rows were changed, then the ID must not exist, so 404
-//         return res.status(404).end();
-//       } else {
-//         res.status(200).end();
-//       }
-//     });
-// });
+  .then(function(err, doc) {
+    // Log any errors
+    if (err) {
+      console.log(err);
+    }
+    else {
+      // Or send the document to the browser
+      //res.redirect("/");
+      window.location.reload();
+    }
+  });
+});
+
+// Delete an article
+app.put("/articles/delete/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: false})
+ 
+  .then(function(err, doc) {
+    // Log any errors
+    if (err) {
+      console.log(err);
+    }
+    else {
+      console.log(doc);
+      // Or send the document to the browser
+      res.redirect("/");
+    }
+  });
+});
+
 
 
 

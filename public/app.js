@@ -1,3 +1,4 @@
+//comment button
 $(document).on("click", ".comment-btn", function() {
   // Empty the comments from the note section
   //console.log($(this));
@@ -39,7 +40,7 @@ $(document).on("click", ".comment-btn", function() {
     });
 });
 
-
+//save comment button
 $(document).on("click", "#savenote", function() {
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
@@ -66,4 +67,30 @@ $(document).on("click", "#savenote", function() {
   // Also, remove the values entered in the input and textarea for note entry
   $("#titleinput").val("");
   $("#bodyinput").val("");
+});
+
+//Handle Save Article button
+$(".save").on("click", function() {
+  var thisId = $(this).parent().attr("data-id");
+  $.ajax({
+      method: "PUT",
+      url: "/articles/" + thisId,
+      success: location.reload()
+  }).done(function(data) {
+    console.log(data);
+   
+  })
+});
+
+//Handle Delete Article button
+$(".delete").on("click", function() {
+  var thisId = $(this).parent().attr("data-id");
+  //console.log(thisId);
+  $.ajax({
+    method: "PUT",
+      url: "/articles/delete/" + thisId,
+    success: location.reload()
+  }).done(function(data) {
+  
+  })
 });
