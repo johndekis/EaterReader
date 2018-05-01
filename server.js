@@ -10,13 +10,13 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI); 
  
+//console.log(MONGOD_URI);
 
 var request = require("request");
 var cheerio = require("cheerio");
 var db = require("./models");
 
 var PORT = process.env.PORT || 8080;
-
 
 
 // Initialize Express
@@ -26,10 +26,11 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+
+
 //set up handlebars
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
-
 
 
 // Routes
@@ -53,7 +54,7 @@ app.get("/", function(req, res){
 });
 
 
-// Savedpage render
+// Saved page render
 app.get("/saved", function(req, res){
   db.Article.find({})
   .then(function(dbArticles) {
@@ -178,6 +179,8 @@ app.post("/articles/:id", function(req, res) {
     });
 });
 
+
+
 // Save an article
 app.put("/articles/:id", function(req, res) {
   // Use the article id to find and update its saved boolean
@@ -196,6 +199,8 @@ app.put("/articles/:id", function(req, res) {
   });
 });
 
+
+
 // Delete an article
 app.put("/articles/delete/:id", function(req, res) {
   // Use the article id to find and update its saved boolean
@@ -213,8 +218,6 @@ app.put("/articles/delete/:id", function(req, res) {
     }
   });
 });
-
-
 
 
 // Start the server

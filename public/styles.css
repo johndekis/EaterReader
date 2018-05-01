@@ -1,0 +1,66 @@
+body {
+    background-color: red;
+}
+
+a {
+    color: black;
+}
+
+
+
+/*   Button Styles   */
+/* ============================================================= */
+.btn {
+    border-radius: 1em;
+    display: inline;
+}
+
+.btn-success {
+    background-color: red;
+   }
+
+.comment-btn, .btn-success {
+    padding:.2em;
+    margin: .2em;
+    
+}
+
+
+/*   Header Styles   */
+/* ============================================================= */
+
+.navbar {
+    margin-bottom: 1em;
+    box-shadow: 0 1em 2em rgb(100,0,0,.8);
+    position: fixed;
+    top:0;
+    width: 100%;
+    background-color: #fff; 
+}
+
+.navbar-header {
+    background-color: red;
+    padding-left: .5em;
+    font-weight: bold;
+}
+
+.navbar-brand {
+    color: white;
+}
+
+
+/*   Panel Styles   */
+/* ============================================================= */
+
+ul {
+    list-style-type: none;
+    padding-left: -0;
+}
+
+.panel {
+    padding: 1em;
+}
+
+.panel, .jumbotron {
+    border-radius: 1em;
+}
