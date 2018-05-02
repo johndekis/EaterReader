@@ -1,7 +1,7 @@
 {{#each articles}}
     {{#unless saved}}
 <li class="article-block">
-   <div class='panel panel-default' data-id="{{_id}} ">
+   <div class='panel panel-default' data-id="{{_id}}">
                               
             <a class='article-link' target='_blank' href='{{link}}'>
                 <h4 class="title">{{title}}</h4>
@@ -9,14 +9,14 @@
             
             <p class="author"> {{author}}</p>
 
-            <div class="btn-group">
+           
                 <button class='btn btn-success save'> Save Article </button>          
                    
 
                 <div class="comments" id={{_id}}></div>
 
                 <button class="comment-btn btn" >Add Comment</button>
-            </div>
+            
             
                     
     </div> 
