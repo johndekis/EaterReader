@@ -4,21 +4,21 @@
    <div class='panel panel-default' data-id="{{_id}}">
                               
             <a class='article-link' target='_blank' href='{{link}}'>
-                <h4>{{title}}</h4>
+                <h4 class="title">{{title}}</h4>
             </a>
 
-            <p>{{author}}</p>
+            <p class="author"> {{author}}</p>
 
-            
-                <button class="btn btn-danger delete"> Delete Article </button>
-                   
-                 
+            <div class="btn-group">
+                <button class="btn btn-danger delete"> Delete Article </button>               
             
 
-            <div class="comments" id={{_id}}></div>
+                <div class="comments" id={{_id}}></div>
 
-            <button class="comment-btn btn" >Add Comment</button>
+                <button class="comment-btn btn" >Add Comment</button>
         
+            </div>
+                
         
     </div> 
 </li>

@@ -1,5 +1,6 @@
 body {
     background-color: red;
+    font-family: 'Titan One', cursive;
 }
 
 a {
@@ -10,21 +11,32 @@ a {
 
 /*   Button Styles   */
 /* ============================================================= */
-.btn {
-    border-radius: 1em;
-    display: inline;
-}
 
 .btn-success {
     background-color: red;
    }
 
 .comment-btn, .btn-success {
-    padding:.2em;
+    padding:.5em;
     margin: .2em;
     
 }
 
+.btn-success:hover {
+    color: red;
+    background-color: white;
+    border: .2em solid red;
+}
+
+.comment-btn:hover {
+    background-color: white;
+    border: .2em solid black;
+    color: black;
+}
+
+.btn-group {
+    width: 16em;
+}
 
 /*   Header Styles   */
 /* ============================================================= */
@@ -36,6 +48,7 @@ a {
     top:0;
     width: 100%;
     background-color: #fff; 
+    z-index: 100;
 }
 
 .navbar-header {
@@ -46,6 +59,8 @@ a {
 
 .navbar-brand {
     color: white;
+    font-size: 3em;
+    text-shadow: 0.05em 0.05em 0.05em #820e1d;
 }
 
 
@@ -63,4 +78,45 @@ ul {
 
 .panel, .jumbotron {
     border-radius: 1em;
+}
+
+.author {
+    padding: 0 1em 0 0;
+    float: right;
+    border-bottom: .3em solid red;
+    
+}
+
+.title {
+    font-size: 3em;
+    border-left: .1em solid red;
+    padding-left: .2em;
+}
+
+.title:hover {
+    color: red;
+    
+
+}
+
+
+
+   
+.caption h1 {
+    color: red;
+    text-shadow: 0.05em 0.05em 0.05em #820e1d;
+}
+
+@media (max-width:768px){
+    body {
+        margin-top: 13em;
+    }
+
+    .title {
+        font-size: 1.5em;
+    }
+
+    .navbar-brand  {
+        font-size: 2em;
+    }
 }
