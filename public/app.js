@@ -1,14 +1,10 @@
 //comment button
-$(document).on("click", ".comment-btn", function() {
-  // Empty the comments from the note section
-  //console.log($(this));
-
-  //$(".comments").empty();
-  // Save the id from the p tag
+$(document).on("click", ".comment-btn", function(e) {
+  e.preventDefault();
   var thisId = $(this).parent().attr("data-id");
   $('[data-id=' + thisId + '].comments').empty();
 
-  //console.log(thisId);
+
 
   // Now make an ajax call for the Article
   $.ajax({
@@ -18,8 +14,7 @@ $(document).on("click", ".comment-btn", function() {
     // With that done, add the note information to the page
     .then(function(data) {
       console.log(data._id);
-     //console.log(thisId);
-      //console.log(data);
+     
       // The title of the article
       $("#" + thisId + "").append("<p>" + data.title + "<p>");
 
@@ -41,7 +36,8 @@ $(document).on("click", ".comment-btn", function() {
 });
 
 //save comment button
-$(document).on("click", "#savenote", function() {
+$(document).on("click", "#savenote", function(e) {
+  e.preventDefault();
   // Grab the id associated with the article from the submit button
   var thisId = $(this).attr("data-id");
 
@@ -70,7 +66,8 @@ $(document).on("click", "#savenote", function() {
 });
 
 //Handle Save Article button
-$(".save").on("click", function() {
+$(".save").on("click", function(e) {
+  e.preventDefault();
   var thisId = $(this).parent().attr("data-id");
   $.ajax({
       method: "PUT",
@@ -83,7 +80,8 @@ $(".save").on("click", function() {
 });
 
 //Handle Delete Article button
-$(".delete").on("click", function() {
+$(".delete").on("click", function(e) {
+  e.preventDefault();
   var thisId = $(this).parent().attr("data-id");
   //console.log(thisId);
   $.ajax({
@@ -91,6 +89,6 @@ $(".delete").on("click", function() {
       url: "/articles/delete/" + thisId,
     success: location.reload()
   }).done(function(data) {
-  
+    console.log(data);
   })
 });
