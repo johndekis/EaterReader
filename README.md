@@ -24,6 +24,9 @@ Give examples
 
 ### Screen Shots
 ![large](./images/eater-reader.png)
+
+-----------------------------------------------------
+
 ![slim](./images/eater-reader-slim.png)
 
 
