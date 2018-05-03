@@ -10,7 +10,6 @@ var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI); 
  
-//console.log(MONGOD_URI);
 
 var request = require("request");
 var cheerio = require("cheerio");
@@ -36,25 +35,23 @@ app.set("view engine", "handlebars");
 // Routes
 //==============================================================================
 
-// Home page render
+// Home page 
+
 app.get("/", function(req, res){
   db.Article.find({})
   .then(function(dbArticles) {
     var hbsObject = {
       articles: dbArticles
     }
-    //console.log(hbsObject);
-    
     res.render("index", hbsObject);
   })
-  .catch(function(err) {
-    
+  .catch(function(err) {    
     res.json(err);
   });
 });
 
 
-// Saved page render
+// Saved Articles page 
 app.get("/saved", function(req, res){
   db.Article.find({})
   .then(function(dbArticles) {
@@ -71,13 +68,11 @@ app.get("/saved", function(req, res){
 
 
 // A GET route for scraping the eater website
-app.get("/scrape", function(req, res) {
-       
+app.get("/scrape", function(req, res) {       
         
   db.Article.find({}).then(savedArticles => {
 
-    let savedTitles = savedArticles.map(article => article.title);
-    
+    let savedTitles = savedArticles.map(article => article.title);    
 
     request("http://www.eater.com/", function(error, response, html) {
       var $ = cheerio.load(html);  
@@ -112,7 +107,7 @@ app.get("/scrape", function(req, res) {
 
           });    // cheerio loop
       
-          res.send("Scrape Complete");
+          res.send("Scrape Complete!");
 
       });// request()
 

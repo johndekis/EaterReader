@@ -2,9 +2,14 @@
 
 This app scrapes headline articles from Eater.com and stores the links in a Mongo database. Users can save articles to be viewed under the saved tab. They can also add and save comments on specific articles.
 
-## Getting Started
+## How it Works
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+- User clicks on the 'Scrape New Articles!' button to get the latest headlines from Eater.com. 
+- Save articles by clicking "save", add a comment with the "add comment" button
+- Saved articles can be viewed under the 'Saved' tab. Here the user can delete the saved articles or add comments.
+
+
+- [Check it out](https://fast-shore-16956.herokuapp.com/)
 
 ### Prerequisites
 
@@ -12,7 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 - [Click here](https://nodejs.org/en/download/) to download
 
-### MongoDB
+#### MongoDB
 
 open-source document database that provides high performance, high availability, and automatic scaling.
  
