@@ -22,15 +22,8 @@ open-source document database that provides high performance, high availability,
 Give examples
 ```
 
-### Screen Shots
+### Screen Shot
 ![large](./images/eater-reader.png)
-
------------------------------------------------------
-
-![slim](./images/eater-reader-slim.png)
-
-
-
 
 
 ## Built With
