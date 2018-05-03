@@ -18,9 +18,7 @@ open-source document database that provides high performance, high availability,
  
  - [Click here](https://docs.mongodb.com/manual/installation/) for installation instructions
 
-```
-Give examples
-```
+
 
 ### Screen Shot
 ![large](./images/eater-reader.png)
@@ -40,7 +38,7 @@ Give examples
 ### Node.js
 - [Express.js](http://expressjs.com/) a web framework for Node.
 - [Request.js](https://www.npmjs.com/package/request) is used for HTTP calls.
-- [Cheerio.js](https://www.npmjs.com/package/cheerio) is a node package that uses jQuery to facilitate parsing, manipulating and       rendering data.
+- [Cheerio.js](https://www.npmjs.com/package/cheerio) is a node package that uses jQuery to facilitate parsing,             manipulating and rendering data.
 
 ## Deployment
  deployed with [Heroku](https://www.heroku.com/).
@@ -48,7 +46,7 @@ Give examples
 
 ## Author
 
-* **John Dekis**  - [PurpleBooth](https://github.com/johndekis)
+* **John Dekis**  - [portfolio](https://johndekis.github.io/Bootstrap-Portfolio/)
 
 ## License
 
