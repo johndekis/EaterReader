@@ -15,7 +15,7 @@ var request = require("request");
 var cheerio = require("cheerio");
 var db = require("./models");
 
-var PORT = process.env.PORT || 8080;
+var PORT = process.env.PORT || 8085;
 
 
 // Initialize Express
@@ -53,7 +53,8 @@ app.get("/", function(req, res){
 
 // Saved Articles page 
 app.get("/saved", function(req, res){
-  db.Article.find({})
+  db.Article.find({saved: true})
+  .populate("comment")
   .then(function(dbArticles) {
     var hbsObject = {
       articles: dbArticles
@@ -68,6 +69,7 @@ app.get("/saved", function(req, res){
 
 
 // A GET route for scraping the eater website
+//  UPDATE: keep only saved articles and clear db before scrape
 app.get("/scrape", function(req, res) {       
         
   db.Article.find({}).then(savedArticles => {
@@ -107,7 +109,8 @@ app.get("/scrape", function(req, res) {
 
           });    // cheerio loop
       
-          res.send("Scrape Complete!");
+          //res.send("Scrape Complete!");
+          res.redirect("/");
 
       });// request()
 
@@ -117,6 +120,13 @@ app.get("/scrape", function(req, res) {
 
 
 
+
+
+
+///
+///  ================ API endpoints ===================
+///
+
 app.get("/articles", function(req, res){
   db.Article.find({})
   .populate("comment")
@@ -124,20 +134,19 @@ app.get("/articles", function(req, res){
     res.json(dball);
   })
 });
-
   
   // Route for grabbing a specific Article by id, populate it with it's save
 app.get("/articles/:id", function(req, res) {
     db.Article.findOne({ _id: req.params.id })
       .populate("comment")
       .then(function(dbArticle) {
+        console.log(dbArticle.comment);
         res.json(dbArticle);
       })
       .catch(function(err) {
         res.json(err);
       });
-});
-  
+}); 
 
 
 // Route for saving/updating an Article's associated Comment
@@ -148,33 +157,32 @@ app.post("/articles/:id", function(req, res) {
       return db.Article.findOneAndUpdate({ _id: req.params.id }, { comment:  dbComment._id}, { new: true });
     })
     .then(function(dbArticle) {
-      res.json(dbArticle);
+      // res.json(dbArticle);
+      db.Comment.find({ _id: dbArticle.comment})
+      .then(dbComment => {
+        console.log("dbComment: " + dbComment);
+      })
+      //res.json(dbArticle);
     })
     .catch(function(err) {
       res.json(err);
     });
 });
 
-
-
 // Save an article
 app.put("/articles/:id", function(req, res) {
   // Use the article id to find and update its saved boolean
-  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true})
-  
+  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true})  
   .then(function(err, doc) {
     // Log any errors
     if (err) {
       console.log(err);
     }
-    else {
-      
-      window.location.reload();
-    }
+        
+     // window.location.reload();
+    
   });
 });
-
-
 
 // Delete an article
 app.put("/articles/delete/:id", function(req, res) {
@@ -194,6 +202,27 @@ app.put("/articles/delete/:id", function(req, res) {
   });
 });
 
+// Delete all unsaved articles
+app.get("/clear", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Article.deleteMany({ "saved": "false"}, (err, obj) => {
+    if(err){
+        console.log(err);
+    }
+    return obj;
+  }) 
+  .then(function(res) {
+    // Log any errors
+    console.log(res);   
+  
+      //console.log(doc);
+      // Or send the document to the browser
+      //res.redirect("/");
+  
+  }).catch(e => {
+    console.log(e);
+  });
+});
 
 // Start the server
 app.listen(PORT, function() {

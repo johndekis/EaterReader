@@ -12,10 +12,15 @@
            
                 <button class='btn btn-success save'> Save Article </button>          
                    
+               {{#if comment}}
+                  <p>comments:</p>
+                  <p>{{comment.title}}</p>
+                {{/if}}
+                <div class="comments" id={{_id}}>
+                    
+                </div>
 
-                <div class="comments" id={{_id}}></div>
-
-                <button class="comment-btn btn" >Add Comment</button>
+                <button class="comment-btn btn" >Comment</button>
             
             
                     

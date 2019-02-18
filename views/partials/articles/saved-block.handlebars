@@ -12,8 +12,12 @@
             
                 <button class="btn btn-danger delete"> Delete Article </button>               
             
-
-                <div class="comments" id={{_id}}></div>
+                {{#if comment}}
+                  <p>comments</p>                 
+                {{/if}}
+                <div class="comments" id={{_id}}>
+                    
+                </div>
 
                 <button class="comment-btn btn" >Add Comment</button>
         
