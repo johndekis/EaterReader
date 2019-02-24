@@ -21,6 +21,9 @@ var ArticleSchema = new Schema({
   saved: {
     type: Boolean, 
     default: false
+  },
+  image: {
+    type: String
   },  
   comment: {
     type: Schema.Types.ObjectId,

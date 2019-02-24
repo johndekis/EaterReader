@@ -6,7 +6,6 @@ var Schema = mongoose.Schema;
 
 var CommentSchema = new Schema({
   title: String,
-  // `body` is of type String
   body: String
  
 });

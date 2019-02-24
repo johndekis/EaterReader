@@ -1,39 +1,31 @@
-var comment_form;
-
 //  =============   comment button   =============================
 $(document).on("click", ".comment-btn", function(e) {
   e.preventDefault();
-  //var target = e.target;
   $('.comment-btn').hide();
-  console.log("this:" + this);
+ 
   //  id of article
   var thisId = $(this).parent().attr("data-id");
-  
+  var comment_form = `
+  <form id='comment_form' class='comment_form'>
+    <input id='new-comment-title' name='title' placeholder='title'>
+    <input id='new-comment-body' name='body' placeholder='comment...' />
+    <button data-id="${thisId}" id='savenote'>save</button>
+    <button class="btn btn-danger" id="close">X</button>
+  </form>`;
   // make an ajax call for the Article
   $.ajax({
     method: "GET",
     url: "/articles/" + thisId
   })  
-    .then(function(data) {      
-
-      comment_form = 
-        `<form id='comment_form'>
-            <input id='new-comment-title' name='title' placeholder='title'>
-            <input id='new-comment-body' name='body' placeholder='comment...' />
-            <button data-id="${thisId}" id='savenote'>Save Note</button>
-            <button class="btn btn-danger" id="close">X</button>
-          </form>`;    
-      
-       // If there's a note in the article
-       if (data.comment && data.comment.body !== "") {
-           
+    .then(function(data) {        
+       // If there's a comment on the article
+       if (data.comment && data.comment.body !== "") {           
         $("#" + thisId + "").append(`<h5 id='comment-title'>${data.comment.title}</h5>`);
         $("#" + thisId + "").append(`<p id='comment-body'>${data.comment.body}</p>`);  
         $("#new-comment-title").val(`${data.comment.title}`);
         $("#new-comment-body").text(`${data.comment.body}`);      
       } 
-
-      $("#" + thisId + "").append(comment_form);   
+      $("#" + thisId + "").append(comment_form);  
     });
 });
 
@@ -44,14 +36,11 @@ $(document).on("click", "#savenote", function(e) {
   // Article Id
   var thisId = $(this).attr("data-id");
 
-  // Run a POST request to change the note, using what's entered in the inputs
   $.ajax({
     method: "POST",
     url: "/articles/" + thisId,    
     data: {
-      // Value taken from title input
       title: $("#new-comment-title").val(),
-      // Value taken from note textarea
       body: $("#new-comment-body").val()
     },
     success: location.reload()
@@ -65,7 +54,7 @@ $(document).on("click", "#savenote", function(e) {
 });
 
 
-//================      Close Comment button    ======================
+//================      Close Comment Form button    ======================
 $(document).on("click", "#savenote", function(e) {
     e.preventDefault();
     //var target = e.target;
@@ -89,7 +78,7 @@ $(".save").on("click", function(e) {
 });
 
 
-//================      Delete Article button    ======================
+//================      Unsave Article button    ======================
 $(".delete").on("click", function(e) {
   e.preventDefault();
   var thisId = $(this).parent().attr("data-id");  
@@ -100,4 +89,19 @@ $(".delete").on("click", function(e) {
   }).done(function(data) {
     console.log(data);
   })
+});
+
+//================      Delete Comment button    ======================
+$(".delete-comment-btn").on("click", function(e) {
+  e.preventDefault();
+  var thisId = $(this).attr("data-id");  
+  $.ajax({
+    method: "PUT",
+      url: "/articles/delete_comment/" + thisId,
+    success: location.reload()
+  }).done(function(data) {
+    console.log(`data`);
+
+  })
+  $('.comment-btn').show();
 });

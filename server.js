@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
- 
+var favicon = require('serve-favicon');
 
 // Connect to the Mongo DB
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
@@ -14,6 +14,7 @@ mongoose.connect(MONGODB_URI);
 var request = require("request");
 var cheerio = require("cheerio");
 var db = require("./models");
+var path = require("path");
 
 var PORT = process.env.PORT || 8085;
 
@@ -25,6 +26,11 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+//app.use(favicon(__dirname + '/public/images/favicon.ico'));
+console.log(`
+dirname: ${__dirname}
+ `);
+app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
 
 
 //set up handlebars
@@ -39,6 +45,7 @@ app.set("view engine", "handlebars");
 
 app.get("/", function(req, res){
   db.Article.find({})
+  .populate("comment")
   .then(function(dbArticles) {
     var hbsObject = {
       articles: dbArticles
@@ -70,13 +77,13 @@ app.get("/saved", function(req, res){
 
 // A GET route for scraping the eater website
 //  UPDATE: keep only saved articles and clear db before scrape
-app.get("/scrape", function(req, res) {       
-        
+app.get("/scrape", function(req, res) {           
   db.Article.find({}).then(savedArticles => {
 
     let savedTitles = savedArticles.map(article => article.title);    
 
     request("http://www.eater.com/", function(error, response, html) {
+
       var $ = cheerio.load(html);  
       $("div.c-entry-box--compact__body").each(function(i, element) {             
 
@@ -85,37 +92,29 @@ app.get("/scrape", function(req, res) {
         newArticle.title = $(this).children("h2").children("a").text();
         newArticle.link = $(this).children("h2").children("a").attr("href");
         newArticle.author = $(this).children("div").children("span").children("a").text();
-
-        //console.log(newArticle.author);
+         newArticle.image = $(this).parent("div").children("a").children("div").children("img").attr("src");
+        //.children("h2").children("a").attr("href");
+        console.log(`${newArticle.image}`);
         
         if(!savedTitles.includes(newArticle.title)){
-
           var entry = new db.Article(newArticle);
           //console.log(entry);
         } else {
-          return
-        }
-              
+          return;
+        }   
 
-      
-          entry.save().then(function(data){
-            console.log(data);
-          })   
-          
-          .catch(function(err) {
-          
+        entry.save().then(function(data){
+          console.log(data);
+        })          
+          .catch(function(err) {          
           return res.json(err);
-              }); //catch
+        }); //catch
 
-          });    // cheerio loop
-      
-          //res.send("Scrape Complete!");
-          res.redirect("/");
-
-      });// request()
-
-  });//second .then()
-     
+      });  // cheerio loop      
+      //res.send("Scrape Complete!");
+      res.redirect("/");
+    });// request()
+  });// .then()     
 });// app.get()
 
 
@@ -149,7 +148,7 @@ app.get("/articles/:id", function(req, res) {
 }); 
 
 
-// Route for saving/updating an Article's associated Comment
+//================      Save / Update Comment Route    ======================
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
   db.Comment.create(req.body)
@@ -177,18 +176,14 @@ app.put("/articles/:id", function(req, res) {
     // Log any errors
     if (err) {
       console.log(err);
-    }
-        
-     // window.location.reload();
-    
+    }    
   });
 });
 
 // Delete an article
 app.put("/articles/delete/:id", function(req, res) {
   // Use the article id to find and update its saved boolean
-  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: false})
- 
+  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: false}) 
   .then(function(err, doc) {
     // Log any errors
     if (err) {
@@ -202,10 +197,28 @@ app.put("/articles/delete/:id", function(req, res) {
   });
 });
 
-// Delete all unsaved articles
+//================      Delete Comment Route    ======================
+app.put("/articles/delete_comment/:id", function(req, res) {
+  // Use the article id to find and update its saved boolean
+  db.Comment.deleteOne({ _id: req.params.id }, function(err, comment) {
+    if (err) {
+      console.log(err);
+    } else {
+
+      if(comment){
+        console.log(comment);
+      } else {
+        console.log(`No comment..`);
+      }
+      
+    }
+  }); 
+});
+
+//================      Delete all unsaved articles    ======================
 app.get("/clear", function(req, res) {
   // Use the article id to find and update its saved boolean
-  db.Article.deleteMany({ "saved": "false"}, (err, obj) => {
+  db.Article.deleteMany({ "saved": "false"}, function(err, obj) {
     if(err){
         console.log(err);
     }
@@ -214,11 +227,6 @@ app.get("/clear", function(req, res) {
   .then(function(res) {
     // Log any errors
     console.log(res);   
-  
-      //console.log(doc);
-      // Or send the document to the browser
-      //res.redirect("/");
-  
   }).catch(e => {
     console.log(e);
   });
